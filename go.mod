@@ -1,4 +1,4 @@
-module github.com/yanyi/generate-multifields-gql
+module github.com/yanyi/generate-multifields
 
 go 1.13
 

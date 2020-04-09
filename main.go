@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/yanyi/generate-multifields-gql/cmd"
-	"github.com/yanyi/generate-multifields-gql/internal/errwrapper"
+	"github.com/yanyi/generate-multifields/cmd"
+	"github.com/yanyi/generate-multifields/internal/errwrapper"
 )
 
 func main() {
