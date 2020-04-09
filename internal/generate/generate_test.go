@@ -21,16 +21,16 @@ func TestOutput(t *testing.T) {
 			name:    "Valid input with 3 repetitions",
 			startID: 1,
 			endID:   3,
-			inputStr: `createSomething$id: createSomething(id:$id) {
+			inputStr: `querySomething$id: querySomething(id:$id) {
   someField
 }`,
-			expected: `createSomething1: createSomething(id:1) {
+			expected: `querySomething1: querySomething(id:1) {
   someField
 }
-createSomething2: createSomething(id:2) {
+querySomething2: querySomething(id:2) {
   someField
 }
-createSomething3: createSomething(id:3) {
+querySomething3: querySomething(id:3) {
   someField
 }`,
 			expectErr: false,
