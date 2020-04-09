@@ -10,9 +10,9 @@ const version = "v0.0.0"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of generate-multifields-gql",
+	Short: "Print the version number of generate-multifields",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("generate-multifields-gql", version)
+		fmt.Println("generate-multifields", version)
 	},
 }
 

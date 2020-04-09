@@ -13,7 +13,7 @@
 *.out
 
 # Built binary of repo
-generate-multifields-gql
+generate-multifields
 
 ### Go Patch ###
 /vendor/

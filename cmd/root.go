@@ -6,9 +6,9 @@ import (
 
 var (
 	rootCmd = &cobra.Command{
-		Use:   "generate-multifields-gql",
+		Use:   "generate-multifields",
 		Short: "Generate multiple fields for GraphQL queries or mutations",
-		Long: `generate-multifields-gql is a CLI library to help generate multiple
+		Long: `generate-multifields is a CLI library to help generate multiple
 	fields of a given input format of your GraphQL queries or mutations, by
 	repeating them for a number of times.`,
 	}
