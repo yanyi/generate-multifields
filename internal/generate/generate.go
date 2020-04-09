@@ -3,10 +3,11 @@
 package generate
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 const (
@@ -15,11 +16,11 @@ const (
 
 // Output generates a given input for repeated times.
 func Output(startID, endID int, input string) (string, error) {
-	var outStrBuilder strings.Builder
-
-	if endID < startID {
-		return "", errors.New("value of --end should not be lesser than --start")
+	if err := validateInputs(startID, endID, input); err != nil {
+		return "", errors.Wrapf(err, "unable to generate output")
 	}
+
+	var outStrBuilder strings.Builder
 
 	if startID == endID {
 		s := strings.Replace(input, strReplacement, strconv.Itoa(startID), -1)
@@ -38,4 +39,16 @@ func Output(startID, endID int, input string) (string, error) {
 	}
 
 	return outStrBuilder.String(), nil
+}
+
+func validateInputs(startID, endID int, input string) error {
+	if endID < startID {
+		return errors.New("value of --end should not be lesser than --start")
+	}
+
+	if len(input) == 0 || input == "" {
+		return errors.New("input should not be empty")
+	}
+
+	return nil
 }
