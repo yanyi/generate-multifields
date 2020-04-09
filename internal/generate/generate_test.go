@@ -1,6 +1,7 @@
 package generate
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -83,6 +84,28 @@ createSomething3: createSomething(id:3) {
 			}
 		})
 	}
+}
+
+func ExampleOutput() {
+	inputStr := `getUser$idName: getUser(id:$id) {
+  name
+}`
+	output, _ := Output(4, 7, inputStr)
+
+	fmt.Println(output)
+	// Output:
+	// getUser4Name: getUser(id:4) {
+	//   name
+	// }
+	// getUser5Name: getUser(id:5) {
+	//   name
+	// }
+	// getUser6Name: getUser(id:6) {
+	//   name
+	// }
+	// getUser7Name: getUser(id:7) {
+	//   name
+	// }
 }
 
 func Test_validateInputs(t *testing.T) {
