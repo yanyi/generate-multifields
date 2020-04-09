@@ -1,12 +1,16 @@
 package cmd
 
 import (
-	"errors"
+	"bytes"
+	"fmt"
+	"os"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
 	"github.com/yanyi/generate-multifields-gql/internal/errwrapper"
+	"github.com/yanyi/generate-multifields-gql/internal/generate"
 )
 
 var mutationsCmd = &cobra.Command{
@@ -29,12 +33,49 @@ var mutationsCmd = &cobra.Command{
 			errwrapper.Fatal(err)
 		}
 	},
-	Run: func(cmd *cobra.Command, args []string) {
-		err := errors.New("mutations: not implemented")
-		errwrapper.Fatal(err)
-	},
+	Run: runFunc,
 }
 
 func init() {
 	rootCmd.AddCommand(mutationsCmd)
+}
+
+// runFunc is used by `cobra.Command.Run`. It does the bulk of the job.
+func runFunc(cmd *cobra.Command, args []string) {
+	fileStr, err := readFile(FormatFilePath)
+	if err != nil {
+		errwrapper.Fatal(err)
+	}
+
+	output, err := generate.Output(StartID, EndID, fileStr)
+	if err != nil {
+		err := errors.Wrapf(err, "unable to generate output")
+		errwrapper.Fatal(err)
+	}
+
+	// Append 'mutation { }' to wrap around given output.
+	var result bytes.Buffer
+	fmt.Fprintln(&result, "mutation {")
+	fmt.Fprintln(&result, output)
+	fmt.Fprint(&result, "}")
+
+	// Print the result to os.Stdout.
+	fmt.Print(result.String())
+}
+
+// readFile opens the given file at the file path and formats the given input
+// before returning.
+func readFile(filePath string) (string, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return "", errors.Wrapf(err, "unable to open file")
+	}
+
+	formattedInput, err := generate.FormattedInput(file)
+	if err != nil {
+		return "", errors.Wrapf(err, "unable to format file")
+	}
+	file.Close()
+
+	return formattedInput, nil
 }
