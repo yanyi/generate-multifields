@@ -50,6 +50,14 @@ createSomething(id:3) {
 }`,
 			expectErr: false,
 		},
+		{
+			name:      "EndID is less than StartID",
+			startID:   10,
+			endID:     9,
+			inputStr:  "",
+			expected:  "",
+			expectErr: true,
+		},
 	}
 
 	for _, tc := range testCases {
