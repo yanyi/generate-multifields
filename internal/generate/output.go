@@ -20,25 +20,25 @@ func Output(startID, endID int, input string) (string, error) {
 		return "", errors.Wrapf(err, "unable to generate output")
 	}
 
-	var outStrBuilder strings.Builder
-
+	// Handle output for only one repetition.
 	if startID == endID {
 		s := strings.Replace(input, strReplacement, strconv.Itoa(startID), -1)
-
 		return s, nil
 	}
 
+	// Build the output string.
+	var strBuilder strings.Builder
 	for id := startID; id <= endID; id++ {
 		s := strings.Replace(input, strReplacement, strconv.Itoa(id), -1)
 
 		if id == endID {
-			fmt.Fprint(&outStrBuilder, s)
+			fmt.Fprint(&strBuilder, s)
 			break
 		}
-		fmt.Fprintln(&outStrBuilder, s)
+		fmt.Fprintln(&strBuilder, s)
 	}
 
-	return outStrBuilder.String(), nil
+	return strBuilder.String(), nil
 }
 
 func validateInputs(startID, endID int, input string) error {
