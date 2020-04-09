@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -19,6 +20,12 @@ var mutationsCmd = &cobra.Command{
 
 		if EndID < StartID {
 			err := errors.New("value of --end should not be lesser than --start")
+			errwrapper.Fatal(err)
+		}
+
+		filePath := strings.TrimSpace(FormatFilePath)
+		if len(filePath) == 0 || filePath == "" {
+			err := errors.New("value of --file-path should not be empty")
 			errwrapper.Fatal(err)
 		}
 	},
