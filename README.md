@@ -1,6 +1,6 @@
-# generate-multifields-gql
+# generate-multifields
 
-`generate-multifields-gql` is a CLI library to help generate multiple fields of
+`generate-multifields` is a CLI library to help generate multiple fields of
 a given input format of your GraphQL queries or mutations, by repeating them for
 a number of times.
 
@@ -18,13 +18,13 @@ and GitHub Actions.
 
 ### Mutations
 
-As of the current version, `generate-multifields-gql` allows generating for
+As of the current version, `generate-multifields` allows generating for
 GraphQL mutations.
 
 Run by entering a start ID and end ID, together with an input file:
 
 ```sh
-generate-multifields-gql mutations -s 10 -e 15 -f hero.txt
+generate-multifields mutations -s 10 -e 15 -f hero.txt
 ```
 
 What the CLI does is to look for instances of `$id` in a given text and replace
