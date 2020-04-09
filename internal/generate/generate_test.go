@@ -36,15 +36,19 @@ createSomething(id:3) {
 		},
 		{
 			name:    "StartID and EndID is same",
-			startID: 1,
-			endID:   1,
+			startID: 1337,
+			endID:   1337,
 			inputStr: `updateAnotherThing(input: {
   thingId: $id
 }) {
   someField
 }`,
-			expected:  "",
-			expectErr: true,
+			expected: `updateAnotherThing(input: {
+  thingId: 1337
+}) {
+  someField
+}`,
+			expectErr: false,
 		},
 	}
 
