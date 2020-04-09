@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
+	"errors"
 
 	"github.com/spf13/cobra"
+
+	"github.com/yanyi/generate-multifields-gql/internal/errwrapper"
 )
 
 var mutationsCmd = &cobra.Command{
@@ -17,8 +18,8 @@ var mutationsCmd = &cobra.Command{
 		cobra.MarkFlagRequired(cmd.Flags(), "file-path")
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("mutations: not implemented")
-		os.Exit(1)
+		err := errors.New("mutations: not implemented")
+		errwrapper.Fatal(err)
 	},
 }
 

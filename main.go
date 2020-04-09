@@ -1,15 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/yanyi/generate-multifields-gql/cmd"
+	"github.com/yanyi/generate-multifields-gql/internal/errwrapper"
 )
 
 func main() {
 	if err := cmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		errwrapper.Fatal(err)
 	}
 }
