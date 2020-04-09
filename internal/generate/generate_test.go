@@ -20,16 +20,16 @@ func TestOutput(t *testing.T) {
 			name:    "Valid input with 3 repetitions",
 			startID: 1,
 			endID:   3,
-			inputStr: `createSomething(id:$id) {
+			inputStr: `createSomething$id: createSomething(id:$id) {
   someField
 }`,
-			expected: `createSomething(id:1) {
+			expected: `createSomething1: createSomething(id:1) {
   someField
 }
-createSomething(id:2) {
+createSomething2: createSomething(id:2) {
   someField
 }
-createSomething(id:3) {
+createSomething3: createSomething(id:3) {
   someField
 }`,
 			expectErr: false,
@@ -38,12 +38,12 @@ createSomething(id:3) {
 			name:    "StartID and EndID is same",
 			startID: 1337,
 			endID:   1337,
-			inputStr: `updateAnotherThing(input: {
+			inputStr: `updateAnotherThing$id: updateAnotherThing(input: {
   thingId: $id
 }) {
   someField
 }`,
-			expected: `updateAnotherThing(input: {
+			expected: `updateAnotherThing1337: updateAnotherThing(input: {
   thingId: 1337
 }) {
   someField
