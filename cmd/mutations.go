@@ -16,6 +16,11 @@ var mutationsCmd = &cobra.Command{
 		cobra.MarkFlagRequired(cmd.Flags(), "start")
 		cobra.MarkFlagRequired(cmd.Flags(), "end")
 		cobra.MarkFlagRequired(cmd.Flags(), "file-path")
+
+		if EndID < StartID {
+			err := errors.New("value of --end should not be lesser than --start")
+			errwrapper.Fatal(err)
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		err := errors.New("mutations: not implemented")
