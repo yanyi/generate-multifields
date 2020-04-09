@@ -1,6 +1,7 @@
 package generate
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -20,16 +21,16 @@ func TestOutput(t *testing.T) {
 			name:    "Valid input with 3 repetitions",
 			startID: 1,
 			endID:   3,
-			inputStr: `createSomething(id:$id) {
+			inputStr: `querySomething$id: querySomething(id:$id) {
   someField
 }`,
-			expected: `createSomething(id:1) {
+			expected: `querySomething1: querySomething(id:1) {
   someField
 }
-createSomething(id:2) {
+querySomething2: querySomething(id:2) {
   someField
 }
-createSomething(id:3) {
+querySomething3: querySomething(id:3) {
   someField
 }`,
 			expectErr: false,
@@ -38,12 +39,12 @@ createSomething(id:3) {
 			name:    "StartID and EndID is same",
 			startID: 1337,
 			endID:   1337,
-			inputStr: `updateAnotherThing(input: {
+			inputStr: `updateAnotherThing$id: updateAnotherThing(input: {
   thingId: $id
 }) {
   someField
 }`,
-			expected: `updateAnotherThing(input: {
+			expected: `updateAnotherThing1337: updateAnotherThing(input: {
   thingId: 1337
 }) {
   someField
@@ -83,6 +84,28 @@ createSomething(id:3) {
 			}
 		})
 	}
+}
+
+func ExampleOutput() {
+	inputStr := `getUser$idName: getUser(id:$id) {
+  name
+}`
+	output, _ := Output(4, 7, inputStr)
+
+	fmt.Println(output)
+	// Output:
+	// getUser4Name: getUser(id:4) {
+	//   name
+	// }
+	// getUser5Name: getUser(id:5) {
+	//   name
+	// }
+	// getUser6Name: getUser(id:6) {
+	//   name
+	// }
+	// getUser7Name: getUser(id:7) {
+	//   name
+	// }
 }
 
 func Test_validateInputs(t *testing.T) {
