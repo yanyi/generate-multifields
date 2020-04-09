@@ -60,7 +60,7 @@ func runFunc(cmd *cobra.Command, args []string) {
 	fmt.Fprint(&result, "}")
 
 	// Print the result to os.Stdout.
-	fmt.Print(result.String())
+	fmt.Println(result.String())
 }
 
 // readFile opens the given file at the file path and formats the given input
