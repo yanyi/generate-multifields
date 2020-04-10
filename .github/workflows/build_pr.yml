@@ -14,18 +14,20 @@ jobs:
       - name: git checkout
         uses: actions/checkout@v2
 
+      - name: Set Docker tag
+        run: |
+          echo ::set-env name=IMAGE_TAG::pr-$(echo "$GITHUB_REF" | awk -F / '{print $3}')
+
       - name: Build Docker image
         if: endsWith(github.ref, '/develop') == false
         run: |
-          export CLI_VERSION=pr-$(echo "$GITHUB_REF" | awk -F / '{print $3}')
-          echo "Building Docker image with $IMAGE_NAME:$CLI_VERSION with $BUILD_SHA"
+          echo "Building Docker image with $IMAGE_NAME:$IMAGE_TAG with $BUILD_SHA"
           docker build \
-            --build-arg CLI_VERSION=$CLI_VERSION \
+            --build-arg CLI_VERSION=$IMAGE_TAG \
             --build-arg BUILD_SHA=$BUILD_SHA \
-            -t $IMAGE_NAME:$CLI_VERSION .
+            -t $IMAGE_NAME:$IMAGE_TAG .
 
       - name: Print CLI version
         if: endsWith(github.ref, '/develop') == false
         run: |
-          export CLI_VERSION=pr-$(echo "$GITHUB_REF" | awk -F / '{print $3}')
-          docker run --rm $IMAGE_NAME:$CLI_VERSION version
+          docker run --rm $IMAGE_NAME:$IMAGE_TAG version
