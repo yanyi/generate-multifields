@@ -7,7 +7,7 @@ RUN apk update && apk add \
 WORKDIR /go/src/github.com/yanyi/generate-multifields
 ENV GO111MODULE=auto
 
-COPY . .
+COPY go.mod go.sum ./
 RUN go get -v ./...
 
 ARG CLI_VERSION
@@ -15,6 +15,7 @@ ENV CLI_VERSION=${CLI_VERSION:-nil}
 ARG BUILD_SHA
 ENV BUILD_SHA=${BUILD_SHA:-nil}
 
+COPY . .
 RUN GOOS=linux GOARCH=386 go build \
   -ldflags="-w -s \
   -X 'github.com/yanyi/generate-multifields/cmd.Version=$CLI_VERSION' \
