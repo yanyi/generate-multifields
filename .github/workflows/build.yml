@@ -1,0 +1,49 @@
+name: Docker Build
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Go for use with actions
+        uses: actions/setup-go@v1.0.0
+        with:
+          version: 1.13.9
+
+      - name: Go cache
+        uses: actions/cache@v1
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Build Docker image (PRs)
+        if: endsWith(github.ref, '/develop') == false
+        env:
+          IMAGE_NAME: yanyi/generate-multifields
+          BUILD_SHA: ${{ github.sha }}
+        run: |
+          export CLI_VERSION=pr-$(echo "$GITHUB_REF" | awk -F / '{print $3}')
+          echo "Building Docker image with $IMAGE_NAME:$CLI_VERSION with $BUILD_SHA"
+          docker build \
+            --build-arg CLI_VERSION=$CLI_VERSION \
+            --build-arg BUILD_SHA=$BUILD_SHA \
+            -t $IMAGE_NAME:$CLI_VERSION .
+
+      - name: Build Docker image (Staging)
+        if: endsWith(github.ref, '/develop')
+        env:
+          IMAGE_NAME: yanyi/generate-multifields
+          BUILD_SHA: ${{ github.sha }}
+        run: |
+          echo $IMAGE_NAME:staging - $BUILD_SHA
