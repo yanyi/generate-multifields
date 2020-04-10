@@ -8,7 +8,7 @@ WORKDIR /go/src/github.com/yanyi/generate-multifields
 ENV GO111MODULE=auto
 
 COPY go.mod go.sum ./
-RUN go get -v ./...
+RUN go mod download
 
 ARG CLI_VERSION
 ENV CLI_VERSION=${CLI_VERSION:-nil}
