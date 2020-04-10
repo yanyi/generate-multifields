@@ -10,7 +10,18 @@ ENV GO111MODULE=auto
 COPY . .
 RUN go get -v ./...
 
-RUN GOOS=linux GOARCH=386 go build -ldflags="-w -s" -o /go/bin/generate-multifields
+ARG CLI_VERSION
+ENV CLI_VERSION=${CLI_VERSION:-nil}
+ARG BUILD_SHA
+ENV BUILD_SHA=${BUILD_SHA:-nil}
+
+RUN GOOS=linux GOARCH=386 go build \
+  -ldflags="-w -s \
+  -X 'github.com/yanyi/generate-multifields/cmd.Version=$CLI_VERSION' \
+  -X 'github.com/yanyi/generate-multifields/cmd.Build=$BUILD_SHA'" \
+  -o /go/bin/generate-multifields
+
+##########
 
 FROM scratch
 
