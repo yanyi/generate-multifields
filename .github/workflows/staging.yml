@@ -1,32 +1,45 @@
-name: Docker Build
+name: Staging
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - develop
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-18.04
 
     env:
       IMAGE_NAME: yanyi/generate-multifields
+      IMAGE_TAG: latest
+      CLI_VERSION: staging
       BUILD_SHA: ${{ github.sha }}
 
     steps:
       - name: git checkout
         uses: actions/checkout@v2
 
-      - name: Set Docker tag
-        run: |
-          echo ::set-env name=IMAGE_TAG::pr-$(echo "$GITHUB_REF" | awk -F / '{print $3}')
-
       - name: Build Docker image
-        if: endsWith(github.ref, '/develop') == false
+        if: endsWith(github.ref, '/develop')
         run: |
           echo "Building Docker image with ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}, commit ${{ env.BUILD_SHA }}."
           docker build \
-            --build-arg CLI_VERSION=${{ env.IMAGE_TAG }} \
+            --build-arg CLI_VERSION=${{ env.CLI_VERSION }} \
             --build-arg BUILD_SHA=${{ env.BUILD_SHA }} \
             -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
 
       - name: Print CLI version
-        if: endsWith(github.ref, '/develop') == false
+        if: endsWith(github.ref, '/develop')
         run: docker run --rm ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} version
+
+      - name: Docker login
+        if: success()
+        uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker image
+        if: success()
+        run: |
+          docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
