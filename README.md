@@ -1,5 +1,7 @@
 # generate-multifields
 
+![Staging](https://github.com/yanyi/generate-multifields/workflows/Staging/badge.svg?branch=develop)
+
 `generate-multifields` is a CLI library to help generate multiple fields of
 a given input format of your GraphQL queries or mutations, by repeating them for
 a number of times.
@@ -13,6 +15,31 @@ run by IDs. I needed a tool to generate them with a given input.
 
 Yes. It was also intended for me to play with [Cobra](https://github.com/spf13/cobra)
 and GitHub Actions.
+
+## Running
+
+### Go
+
+Install the CLI using:
+
+```sh
+go install
+```
+
+After that, use the CLI:
+
+```sh
+generate-multifields mutations -s 10 -e 15 -f hero.txt
+```
+
+### Docker
+
+Excluding the `docker pull` command, you can run this immediately:
+
+```sh
+docker run --rm -v $(pwd):/usr/ yanyi/generate-multifields:latest \
+    mutations -s 10 -e 15 -f /usr/hero.txt
+```
 
 ## Usage
 
