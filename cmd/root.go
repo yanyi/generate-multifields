@@ -9,8 +9,8 @@ var (
 		Use:   "generate-multifields",
 		Short: "Generate multiple fields for GraphQL queries or mutations",
 		Long: `generate-multifields is a CLI library to help generate multiple
-	fields of a given input format of your GraphQL queries or mutations, by
-	repeating them for a number of times.`,
+fields of a given input format of your GraphQL queries or mutations, by
+repeating them for a number of times.`,
 	}
 
 	// StartID is the starting ID number to start with.
