@@ -1,6 +1,6 @@
 # generate-multifields
 
-![Staging](https://github.com/yanyi/generate-multifields/workflows/Staging/badge.svg?branch=develop)
+![Staging](https://github.com/yanyi/generate-multifields/workflows/Staging/badge.svg?branch=master)
 
 `generate-multifields` is a CLI library to help generate multiple fields of
 a given input format of your GraphQL queries or mutations, by repeating them for
