@@ -37,8 +37,8 @@ generate-multifields mutations -s 10 -e 15 -f hero.txt
 Excluding the `docker pull` command, you can run this immediately:
 
 ```sh
-docker run --rm -v $(pwd):/usr/ yanyi/generate-multifields:latest \
-    mutations -s 10 -e 15 -f /usr/hero.txt
+docker run --rm -v $(pwd):/tmp yanyi/generate-multifields:latest \
+    mutations -s 10 -e 15 -f /tmp/hero.txt
 ```
 
 ## Usage
