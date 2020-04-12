@@ -18,9 +18,15 @@ var mutationsCmd = &cobra.Command{
 	Short: "Generate multiple fields of a given mutation format",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		// Require flags to be set before continuing with the run.
-		cobra.MarkFlagRequired(cmd.Flags(), "start")
-		cobra.MarkFlagRequired(cmd.Flags(), "end")
-		cobra.MarkFlagRequired(cmd.Flags(), "file-path")
+		if err := cobra.MarkFlagRequired(cmd.Flags(), "start"); err != nil {
+			errwrapper.Fatal(err)
+		}
+		if err := cobra.MarkFlagRequired(cmd.Flags(), "end"); err != nil {
+			errwrapper.Fatal(err)
+		}
+		if err := cobra.MarkFlagRequired(cmd.Flags(), "file-path"); err != nil {
+			errwrapper.Fatal(err)
+		}
 
 		if EndID < StartID {
 			err := errors.New("value of --end should not be lesser than --start")
