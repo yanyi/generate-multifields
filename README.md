@@ -2,7 +2,7 @@
 
 ![Staging](https://github.com/yanyi/generate-multifields/workflows/Staging/badge.svg?branch=master)
 
-`generate-multifields` is a CLI library to help generate multiple fields of
+`generate-multifields` (`gmf`) is a CLI library to help generate multiple fields of
 a given input format of your GraphQL queries or mutations, by repeating them for
 a number of times.
 
@@ -16,42 +16,81 @@ run by IDs. I needed a tool to generate them with a given input.
 Yes. It was also intended for me to play with [Cobra](https://github.com/spf13/cobra)
 and GitHub Actions.
 
+## Downloading
+
+### Released Versions
+
+Get the latest binary for your OS/Architecture from the
+[Releases tab](https://github.com/yanyi/generate-multifields/releases/latest).
+The following is the `curl` instructions for macOS:
+
+```sh
+$ curl -L https://github.com/yanyi/generate-multifields/releases/latest/download/gmf-darwin_x86_64 > gmf && \
+  chmod +x gmf && \
+  mv gmf /usr/local/bin
+
+$ which gmf
+/usr/local/bin/gmf
+```
+
+Using Docker for released versions:
+
+```sh
+$ docker pull yanyi/generate-multifields:0.1.0
+0.1.0: Pulling from yanyi/generate-multifields
+```
+
+<!-- Collapse the developmental version instructions -->
+<details>
+  <summary>Development Version</summary>
+
+#### Go
+
+Clone the repository and run:
+
+```sh
+$ go build -i -o gmf && mv gmf /usr/local/bin
+
+$ which gmf
+/usr/local/bin/gmf
+```
+
+#### Docker
+
+```sh
+$ docker pull yanyi/generate-multifields:latest
+latest: Pulling from yanyi/generate-multifields
+```
+
+</details>
+<!-- End of collapsing developmental version instructions -->
+
 ## Running
 
-### Go
-
-Install the CLI using:
+For non-Docker, running the CLI is as simple as:
 
 ```sh
-go install
+$ gmf mutations -s 10 -e 15 -f hero.txt
 ```
 
-After that, use the CLI:
+For Docker, mount the working directory as volume (`-v` flag):
 
 ```sh
-generate-multifields mutations -s 10 -e 15 -f hero.txt
-```
-
-### Docker
-
-Excluding the `docker pull` command, you can run this immediately:
-
-```sh
-docker run --rm -v $(pwd):/tmp yanyi/generate-multifields:latest \
+$ docker run --rm -v $(pwd):/tmp yanyi/generate-multifields:latest \
     mutations -s 10 -e 15 -f /tmp/hero.txt
 ```
 
-## Usage
+## Commands
 
 ### Mutations
 
-As of the current version, `generate-multifields` allows generating for
+As of the current version, `gmf` allows generating for
 GraphQL mutations.
 
 Run by entering a start ID and end ID, together with an input file:
 
 ```sh
-generate-multifields mutations -s 10 -e 15 -f hero.txt
+gmf mutations -s 10 -e 15 -f hero.txt
 ```
 
 What the CLI does is to look for instances of `$id` in a given text and replace
