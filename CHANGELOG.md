@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (2020-04-11)
+## v0.1.0 (2020-04-12)
 
 First version of the CLI.
 
