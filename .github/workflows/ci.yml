@@ -3,7 +3,36 @@ name: CI
 on: [push]
 
 jobs:
+  lint:
+    name: Go lint
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Go for use with actions
+        uses: actions/setup-go@v1.0.0
+        with:
+          version: 1.13.9
+
+      - name: Download golangci-lint
+        # Installs to ./bin since installing to /home/runner/go/bin/golangci-lint
+        # doesn't work - `line 1: golangci-lint: command not found`.
+        run: |
+          curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.24.0
+          ./bin/golangci-lint version
+
+      - name: Run golangci-lint
+        # Run with defaults https://github.com/golangci/golangci-lint/tree/1.24.0
+        # with additional `goimports` and `unused`.
+        run: |
+          ./bin/golangci-lint run \
+            -E goimports \
+            -E unused
+
   test:
+    name: Go tests
     runs-on: ubuntu-18.04
 
     steps:
