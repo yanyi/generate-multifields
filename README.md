@@ -67,6 +67,16 @@ latest: Pulling from yanyi/generate-multifields
 
 ## Running
 
+Using a text file, the CLI looks for instances of `$id` and replaces it with
+the IDs when running the `mutations` command. Here is an example of a text file:
+
+```txt
+hero$id: updateHeroLocation(id: $id, location: "Missing") {
+  id
+  location
+}
+```
+
 For non-Docker, running the CLI is as simple as:
 
 ```sh
@@ -90,17 +100,7 @@ GraphQL mutations.
 Run by entering a start ID and end ID, together with an input file:
 
 ```sh
-gmf mutations -s 10 -e 15 -f hero.txt
-```
-
-What the CLI does is to look for instances of `$id` in a given text and replace
-it with the IDs. Here is an example of a text file:
-
-```txt
-hero$id: updateHeroLocation(id: $id, location: "Missing") {
-  id
-  location
-}
+$ gmf mutations -s 10 -e 15 -f hero.txt
 ```
 
 The CLI generates the output like:
