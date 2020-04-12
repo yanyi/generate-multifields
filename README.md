@@ -90,6 +90,12 @@ $ docker run --rm -v $(pwd):/tmp yanyi/generate-multifields:latest \
     mutations -s 10 -e 15 -f /tmp/hero.txt
 ```
 
+**Tip for Docker users** - Add an `alias` for the Docker run instruction:
+
+```sh
+alias gmf="docker run --rm -v $(pwd):/tmp yanyi/generate-multifields:latest"
+```
+
 ## Commands
 
 ### Mutations
