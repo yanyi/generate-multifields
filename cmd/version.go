@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"io"
+	"runtime"
 	"text/tabwriter"
 
 	"github.com/spf13/cobra"
@@ -35,4 +36,5 @@ func prettyPrint(out io.Writer) {
 
 	fmt.Fprintln(w, " Version:\t", Version)
 	fmt.Fprintln(w, " Build:\t", Build)
+	fmt.Fprintln(w, " OS/Arch:\t", fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH))
 }

@@ -1,0 +1,91 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  github-build-and-release:
+    name: Build Go binaries and release on GitHub
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Go for use with actions
+        uses: actions/setup-go@v1.0.0
+        with:
+          version: 1.13.9
+
+      - name: Go cache
+        uses: actions/cache@v1
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Run Go build for different OSes and architectures
+        run: |
+          TAG_WITHOUT_V=$(echo "$GITHUB_REF" | awk -F / '{print $3}' | awk -F v '{print $2}')
+          ./build-binaries $TAG_WITHOUT_V ${{ github.sha }}
+
+      - name: Run Go build for different OSes and architectures
+        run: |
+          TAG_WITHOUT_V=$(echo "$GITHUB_REF" | awk -F / '{print $3}' | awk -F v '{print $2}')
+          ./build-binaries $TAG_WITHOUT_V ${{ github.sha }}
+
+      - name: Create GitHub Release and upload assets
+        if: success() && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: false
+          prerelease: false
+          body_path: CHANGELOG.md
+          files: gmf-*
+
+  docker-build-and-push:
+    # Only release to Docker if GitHub's release is completed.
+    needs: github-build-and-release
+    name: Build release Docker image and push to Docker Hub
+    runs-on: ubuntu-18.04
+
+    env:
+      IMAGE_NAME: yanyi/generate-multifields
+      BUILD_SHA: ${{ github.sha }}
+
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+
+      - name: Set environment variables using Git tag (without 'v')
+        run: |
+          TAG_WITHOUT_V=$(echo "$GITHUB_REF" | awk -F / '{print $3}' | awk -F v '{print $2}')
+          echo ::set-env name=VERSION::$TAG_WITHOUT_V
+
+      - name: Build Docker image
+        run: |
+          echo "Building Docker image with ${{ env.IMAGE_NAME }}:${{ env.VERSION }}, commit ${{ env.BUILD_SHA }}."
+          docker build \
+            --build-arg CLI_VERSION=${{ env.VERSION }} \
+            --build-arg BUILD_SHA=${{ env.BUILD_SHA }} \
+            -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} .
+
+      - name: Print CLI version
+        run: docker run --rm ${{ env.IMAGE_NAME }}:${{ env.VERSION }} version
+
+      - name: Docker login
+        if: success()
+        uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker image
+        if: success()
+        run: |
+          docker push ${{ env.IMAGE_NAME }}:${{ env.VERSION }}

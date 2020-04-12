@@ -1,0 +1,40 @@
+#!/bin/bash
+
+VERSION=$1
+BUILD=$2
+if [ -z "$VERSION" ]; then
+    echo "Require argument for version"
+    exit 1
+fi
+if [ -z "$BUILD" ]; then
+    echo "Require argument for build"
+    exit 1
+fi
+
+echo "Building Go binaries"
+GOBUILD="go build \
+  -ldflags=\"-w -s \
+  -X 'github.com/yanyi/generate-multifields/cmd.Version=$VERSION' \
+  -X 'github.com/yanyi/generate-multifields/cmd.Build=$BUILD'\""
+
+# Build for Linux architectures.
+linuxArchs=(
+  "386"
+  "arm64"
+  "amd64"
+)
+for arch in "${linuxArchs[@]}"
+do
+  GOOS=linux GOARCH="$arch" eval $GOBUILD -o ./gmf-linux_$arch
+  echo "Built for Linux - gmf-linux_$arch"
+done
+
+# Build for macOS X86 64.
+GOOS=darwin GOARCH=amd64 eval $GOBUILD -o ./gmf-darwin_x86_64
+echo "Built for macOS - gmf-darwin_x86_64"
+
+# Build for Windows X86 64.
+GOOS=windows GOARCH=amd64 eval $GOBUILD -o ./gmf-win_amd64
+echo "Built for Windows - gmf-win_amd64"
+
+echo "Finished building Go binaries 🎉"
